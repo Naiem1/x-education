@@ -1,0 +1,969 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: X-Education API
+  description: This is a API project for X-Education. This is the simple Edtech API application where admin and client create a new account, login their existing system. Client only see all courses and single course and only Admin can create, delete, update and see all course
+
+  contact:
+    name: Naiemul Islam
+    email: naiemulislam.dev@gmail.com
+servers:
+  - description: Dev Environment
+    url: http://localhost:4000/api/v1
+tags:
+  - name: Auth
+    description: Authorization Endpoints (public)
+  - name: Course
+    description: Course Endpoints (public + private)
+paths:
+  '/auth/register':
+    post:
+      tags: [Auth]
+      description: Create a new account
+      requestBody:
+        description: Register a new user using name, email & password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  format: name
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password12345
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Register Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Register Successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /auth/register
+                      login:
+                        type: string
+                        example: /auth/login
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/400'
+  '/auth/login':
+    post:
+      tags: [Auth]
+      description: login to your account
+      requestBody:
+        description: login to your existing account using email & password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password12345
+              required: [email, password]
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/auth/login'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/course':
+    get:
+      tags: [Course]
+      description: Retrieve all published course
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Get all stored course
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            name:
+                              type: string
+                              example: 'Introduction to Web Development'
+                            description:
+                              type: string
+                              example: A Comprehensive Introduction to Web Development
+                            price:
+                              type: integer
+                              format: int32
+                              example: 5000
+                            duration:
+                              type: string
+                              example: 8 week
+                            level:
+                              type: string
+                              example: Beginner
+                            topics:
+                              type: array
+                              items:
+                                oneOf:
+                                  - type: string
+                                    example: HTML
+                                  - type: string
+                                    example: CSS
+                                  - type: string
+                                    example: JavaScript
+                                  - type: string
+                                    example: Vue.js
+                                  - type: string
+                                    example: Node.js
+                                  - type: string
+                                    example: Express.js
+                                  - type: string
+                                    example: RESTful APIs
+                            schedule:
+                              type: object
+                              properties:
+                                startDate:
+                                  type: string
+                                  format: time-date
+                                  example: 2023-02-15
+                                endDate:
+                                  type: string
+                                  format: time-date
+                                  example: 2023-04-10
+                                classDays:
+                                  type: array
+                                  items:
+                                    oneOf:
+                                      - type: string
+                                        example: Monday
+                                      - type: string
+                                        example: Wednesday
+                                      - type: string
+                                        example: Friday
+                                classTime:
+                                  type: string
+                                  format: date-time
+                                  example: 18.20-20.00
+
+                            link:
+                              type: string
+                              format: url
+                              example: '/course/1'
+                          required: [id, title, author]
+                        - $ref: '#/components/schemas/Timestamps'
+                  pagination:
+                    $ref: '#/components/schemas/pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/course?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/articles?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/course?page=1&limit=10'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+
+      operationId: createCourse
+      tags: [Course]
+      description: create a new course
+      requestBody:
+        description: To Create a  new course admin must need to provide valid data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 'Introduction to Web Development'
+                description:
+                  type: string
+                  example: A Comprehensive Introduction to Web Development
+                price:
+                  type: integer
+                  format: int32
+                  example: 5000
+                duration:
+                  type: string
+                  example: 8 week
+                level:
+                  type: string
+                  example: Beginner
+                topics:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: string
+                        example: HTML
+                      - type: string
+                        example: CSS
+                      - type: string
+                        example: JavaScript
+                      - type: string
+                        example: Vue.js
+                      - type: string
+                        example: Node.js
+                      - type: string
+                        example: Express.js
+                      - type: string
+                        example: RESTful APIs
+                schedule:
+                  type: object
+                  properties:
+                    startDate:
+                      type: string
+                      format: time-date
+                      example: 2023-02-15
+                    endDate:
+                      type: string
+                      format: time-date
+                      example: 2023-04-10
+                    classDays:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: string
+                            example: Monday
+                          - type: string
+                            example: Wednesday
+                          - type: string
+                            example: Friday
+                    classTime:
+                      type: string
+                      format: date-time
+                      example: 18.20-20.00
+              required:
+                - name
+                - description
+                - price
+                - duration
+                - level
+                - topics
+                - schedule
+                - classTime
+
+      responses:
+        '201':
+          description: Successfully created  a new article
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+
+                  message:
+                    type: string
+                    example: The course has been added successfully
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: 'Introduction to Web Development'
+                      description:
+                        type: string
+                        example: A Comprehensive Introduction to Web Development
+                      price:
+                        type: integer
+                        format: int32
+                        example: 5000
+                      duration:
+                        type: string
+                        example: 8 week
+                      level:
+                        type: string
+                        example: Beginner
+                      topics:
+                        type: array
+                        items:
+                          oneOf:
+                            - type: string
+                              example: HTML
+                            - type: string
+                              example: CSS
+                            - type: string
+                              example: JavaScript
+                            - type: string
+                              example: Vue.js
+                            - type: string
+                              example: Node.js
+                            - type: string
+                              example: Express.js
+                            - type: string
+                              example: RESTful APIs
+                      schedule:
+                        type: object
+                        properties:
+                          startDate:
+                            type: string
+                            format: time-date
+                            example: 2023-02-15
+                          endDate:
+                            type: string
+                            format: time-date
+                            example: 2023-04-10
+                          classDays:
+                            type: array
+                            items:
+                              oneOf:
+                                - type: string
+                                  example: Monday
+                                - type: string
+                                  example: Wednesday
+                                - type: string
+                                  example: Friday
+                          classTime:
+                            type: string
+                            format: date-time
+                            example: 18.20-20.00
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/course/{id}':
+    get:
+      operationId: getCourseById
+      tags: [Course]
+      description: Fetch a single course
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+
+      responses:
+        '200':
+          description: Single Course view
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Course'
+
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /articles/1
+                      author:
+                        type: string
+                        format: url
+                        example: /articles/1/author
+                      comments:
+                        type: string
+                        format: url
+                        example: /articles/1/comments
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - BearerAuth: []
+
+      operationId: coursePutById
+      tags: [Course]
+      description: Create or update entire Course by ID
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: Update or create Course using body data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 658294fc512b51a22147e014
+                name:
+                  type: string
+                  example: 'Introduction to Web Development'
+                description:
+                  type: string
+                  example: A Comprehensive Introduction to Web Development
+                price:
+                  type: integer
+                  format: int32
+                  example: 5000
+                duration:
+                  type: string
+                  example: 8 week
+                level:
+                  type: string
+                  example: Beginner
+                topics:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: string
+                        example: HTML
+                      - type: string
+                        example: CSS
+                      - type: string
+                        example: JavaScript
+                      - type: string
+                        example: Vue.js
+                      - type: string
+                        example: Node.js
+                      - type: string
+                        example: Express.js
+                      - type: string
+                        example: RESTful APIs
+                schedule:
+                  type: object
+                  properties:
+                    startDate:
+                      type: string
+                      format: time-date
+                      example: 2023-02-15
+                    endDate:
+                      type: string
+                      format: time-date
+                      example: 2023-04-10
+                    classDays:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: string
+                            example: Monday
+                          - type: string
+                            example: Wednesday
+                          - type: string
+                            example: Friday
+                    classTime:
+                      type: string
+                      format: date-time
+                      example: 18.20-20.00
+              required:
+                - name
+                - description
+                - price
+                - duration
+                - level
+                - topics
+                - schedule
+                - classTime
+      responses:
+        '200':
+          description: Article Successfully Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseCreateDTO'
+        '201':
+          $ref: '#/components/responses/201'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - BearerAuth: []
+
+      operationId: patchArticleById
+      tags: [Course]
+      description: Partially updated an article by ID
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: Update using body data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 'Introduction to Web Development'
+                description:
+                  type: string
+                  example: A Comprehensive Introduction to Web Development
+                price:
+                  type: integer
+                  format: int32
+                  example: 5000
+                duration:
+                  type: string
+                  example: 8 week
+                level:
+                  type: string
+                  example: Beginner
+                topics:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: string
+                        example: HTML
+                      - type: string
+                        example: CSS
+                      - type: string
+                        example: JavaScript
+                      - type: string
+                        example: Vue.js
+                      - type: string
+                        example: Node.js
+                      - type: string
+                        example: Express.js
+                      - type: string
+                        example: RESTful APIs
+                schedule:
+                  type: object
+                  properties:
+                    startDate:
+                      type: string
+                      format: time-date
+                      example: 2023-02-15
+                    endDate:
+                      type: string
+                      format: time-date
+                      example: 2023-04-10
+                    classDays:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: string
+                            example: Monday
+                          - type: string
+                            example: Wednesday
+                          - type: string
+                            example: Friday
+                    classTime:
+                      type: string
+                      format: date-time
+                      example: 18.20-20.00
+      responses:
+        '200':
+          description: Article updated Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrouseUpdateDTO'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Course]
+      description: Delete an Course By ID
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: Course deleted Successfully
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    Course:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: 'Introduction to Web Development'
+            description:
+              type: string
+              example: A Comprehensive Introduction to Web Development
+            price:
+              type: integer
+              format: int32
+              example: 5000
+            duration:
+              type: string
+              example: 8 week
+            level:
+              type: string
+              example: Beginner
+            topics:
+              type: array
+              items:
+                oneOf:
+                  - type: string
+                    example: HTML
+                  - type: string
+                    example: CSS
+                  - type: string
+                    example: JavaScript
+                  - type: string
+                    example: Vue.js
+                  - type: string
+                    example: Node.js
+                  - type: string
+                    example: Express.js
+                  - type: string
+                    example: RESTful APIs
+            schedule:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  format: time-date
+                  example: 2023-02-15
+                endDate:
+                  type: string
+                  format: time-date
+                  example: 2023-04-10
+                classDays:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: string
+                        example: Monday
+                      - type: string
+                        example: Wednesday
+                      - type: string
+                        example: Friday
+                classTime:
+                  type: string
+                  format: date-time
+                  example: 18.20-20.00
+          required:
+            - name
+            - description
+            - price
+            - duration
+            - level
+            - topics
+            - schedule
+            - classTime
+        - $ref: '#/components/schemas/Timestamps'
+    CourseCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: The course has been added successfully
+        data:
+          $ref: '#/components/schemas/Course'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: /course/1
+
+    CrouseUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Course Updated Successfully
+        data:
+          $ref: '#/components/schemas/Course'
+        links:
+          type: object
+          properties:
+            link:
+              type: string
+              format: url
+              example: /articles/1
+
+    Timestamps:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+    pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 2
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        next:
+          type: integer
+          format: int32
+          example: 3
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        totalPage:
+          type: integer
+          format: int32
+          example: 15
+        totalItems:
+          type: integer
+          format: int32
+          example: 150
+      required:
+        - page
+        - limit
+        - totalPage
+        - totalItems
+
+  responses:
+    '201':
+      description: Successfully Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CourseCreateDTO'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid Email
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    '401':
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized access
+              message:
+                type: string
+                example: You don't have the right permission
+    '404':
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource Not Found
+    '500':
+      description: Internal Server Error Occurred
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error Occurred
+              message:
+                type: string
+                example: We are sorry for the inconvenience. please try again later
+
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: current page number
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    limitParam:
+      in: query
+      name: limit
+      description: Maximum items to be return
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: The type of sort (asc or dsc)
+      schema:
+        type: string
+        enum: [asc, dsc]
+        example: dsc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: Sort key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: Search Term
+      schema:
+        type: string
+        example: name
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      description: Course ID
+      schema:
+        type: string
+        example: 658294fc512b51a22147e014
