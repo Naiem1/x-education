@@ -8,7 +8,7 @@ const swaggerDoc = YAML.load('./swagger.yaml');
 const applyMiddleware = (app) => {
   app.use(cors());
   app.use(express.json());
-  app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     OpenApiValidator.middleware({
       apiSpec: './swagger.yaml',
