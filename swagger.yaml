@@ -197,11 +197,10 @@ paths:
                               properties:
                                 startDate:
                                   type: string
-                                  format: time-date
+                                  format: date-time
                                   example: 2023-02-15
                                 endDate:
                                   type: string
-                                  format: time-date
                                   example: 2023-04-10
                                 classDays:
                                   type: array
@@ -298,12 +297,12 @@ paths:
                   properties:
                     startDate:
                       type: string
-                      format: time-date
+                      format: date-time
                       example: 2023-02-15
                     endDate:
                       type: string
-                      format: time-date
-                      example: 2023-04-10
+                      format: date-time
+                      example: "2023-04-10"
                     classDays:
                       type: array
                       items:
@@ -386,11 +385,11 @@ paths:
                         properties:
                           startDate:
                             type: string
-                            format: time-date
+                            format: date-time
                             example: 2023-02-15
                           endDate:
                             type: string
-                            format: time-date
+                            format: date-time
                             example: 2023-04-10
                           classDays:
                             type: array
@@ -515,11 +514,11 @@ paths:
                   properties:
                     startDate:
                       type: string
-                      format: time-date
+                      format: date-time
                       example: 2023-02-15
                     endDate:
                       type: string
-                      format: time-date
+                      format: date-time
                       example: 2023-04-10
                     classDays:
                       type: array
@@ -612,11 +611,11 @@ paths:
                   properties:
                     startDate:
                       type: string
-                      format: time-date
+                      format: date-time
                       example: 2023-02-15
                     endDate:
                       type: string
-                      format: time-date
+                      format: date-time
                       example: 2023-04-10
                     classDays:
                       type: array
@@ -719,11 +718,11 @@ components:
               properties:
                 startDate:
                   type: string
-                  format: time-date
+                  format: date-time
                   example: 2023-02-15
                 endDate:
                   type: string
-                  format: time-date
+                  format: date-time
                   example: 2023-04-10
                 classDays:
                   type: array
